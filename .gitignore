@@ -1,3 +1,4 @@
-
 wrangler.toml
 .cargo-ok
+package-lock.json
+node_modules/

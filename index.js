@@ -1,10 +1,6 @@
 addEventListener("fetch", (event) => {
   event.respondWith(handleRequest(event.request));
 });
-/**
- * Respond with hello worker text
- * @param {Request} request
- */
 
 function getRandomInt(max) {
   return Math.floor(Math.random() * Math.floor(max));
@@ -14,6 +10,10 @@ function choose_variant(variants) {
   return variants[getRandomInt(variants.length)];
 }
 
+/**
+ * Respond with hello worker text
+ * @param {Request} request
+ */
 async function handleRequest(request) {
   const response = await fetch(
     "https://cfw-takehome.developers.workers.dev/api/variants"

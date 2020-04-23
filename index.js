@@ -28,10 +28,9 @@ class ElementHandler {
   }
 }
 
-const rewriter = new HTMLRewriter().on(
-  "title",
-  new ElementHandler("This is new!")
-);
+const rewriter = new HTMLRewriter()
+  .on("title", new ElementHandler("This is new!"))
+  .on("h1#title", new ElementHandler("This is also new!"));
 
 /**
  * Respond with hello worker text

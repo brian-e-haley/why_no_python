@@ -5,16 +5,25 @@ addEventListener("fetch", (event) => {
  * Respond with hello worker text
  * @param {Request} request
  */
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * Math.floor(max));
+}
+
+function choose_variant(variants) {
+  return variants[getRandomInt(variants.length)];
+}
+
 async function handleRequest(request) {
   const response = await fetch(
     "https://cfw-takehome.developers.workers.dev/api/variants"
   );
   const data = await response.json();
   const variants = data.variants;
-  const variant_1 = await fetch(variants[0]);
-  const response_1 = await variant_1.text();
-  console.log(response_1);
-  return new Response(response_1, {
+  const variant = choose_variant(variants)
+  const variant_data = await fetch(variant);
+  const variant_html = await variant_data.text();
+  return new Response(variant_html, {
     headers: { "content-type": "text/html" },
   });
 }

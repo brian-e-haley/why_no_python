@@ -30,7 +30,8 @@ class ElementHandler {
 
 const rewriter = new HTMLRewriter()
   .on("title", new ElementHandler("This is new!"))
-  .on("h1#title", new ElementHandler("This is also new!"));
+  .on("h1#title", new ElementHandler("This is also new!"))
+  .on("p#description", new ElementHandler("This is a new description."));
 
 /**
  * Respond with hello worker text

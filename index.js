@@ -7,7 +7,8 @@ function getRandomInt(max) {
 }
 
 function choose_variant(variants) {
-  return variants[getRandomInt(variants.length)];
+  const number = getRandomInt(variants.length) + 1
+  return {html: variants[number - 1], number: number};
 }
 
 class ElementHandler {
@@ -37,21 +38,6 @@ class ElementHandler {
   }
 }
 
-const rewriter = new HTMLRewriter()
-  .on("title", new ElementHandler({ content: "This is new!" }))
-  .on("h1#title", new ElementHandler({ content: "This is also new!" }))
-  .on(
-    "p#description",
-    new ElementHandler({ content: "This is a new description." })
-  )
-  .on(
-    "a#url",
-    new ElementHandler({
-      content: "This is the GitHub",
-      url: "https://github.com/brian-e-haley/why_no_python",
-    })
-  );
-
 /**
  * Respond with hello worker text
  * @param {Request} request
@@ -64,12 +50,27 @@ async function handleRequest(request) {
   const variants = data.variants;
 
   const variant = choose_variant(variants);
-  const variant_data = await fetch(variant);
+  const variant_data = await fetch(variant.html);
   const variant_html = await variant_data.text();
 
   const original_response = new Response(variant_html, {
     headers: { "content-type": "text/html" },
   });
+
+  const rewriter = new HTMLRewriter()
+  .on("title", new ElementHandler({ content: "This is new!" }))
+  .on("h1#title", new ElementHandler({ content: "This is also new!" }))
+  .on(
+    "p#description",
+    new ElementHandler({ content: `This is variant ${variant.number}!` })
+  )
+  .on(
+    "a#url",
+    new ElementHandler({
+      content: "Take me to the repo!",
+      url: "https://github.com/brian-e-haley/why_no_python",
+    })
+  );
 
   const new_response = rewriter.transform(original_response);
   return new_response;

@@ -11,12 +11,21 @@ function choose_variant(variants) {
 }
 
 class ElementHandler {
-  constructor(content) {
+  constructor({ content = null, url = null }) {
     this.content = content;
+    this.url = url;
   }
   element(element) {
     // An incoming element, such as `div`
-    element.setInnerContent(this.content);
+    if (this.content !== null) {
+      element.setInnerContent(this.content);
+    }
+    if (this.url !== null) {
+      element.setAttribute(
+        "href",
+        "https://github.com/brian-e-haley/why_no_python"
+      );
+    }
   }
 
   comments(comment) {
@@ -29,9 +38,19 @@ class ElementHandler {
 }
 
 const rewriter = new HTMLRewriter()
-  .on("title", new ElementHandler("This is new!"))
-  .on("h1#title", new ElementHandler("This is also new!"))
-  .on("p#description", new ElementHandler("This is a new description."));
+  .on("title", new ElementHandler({ content: "This is new!" }))
+  .on("h1#title", new ElementHandler({ content: "This is also new!" }))
+  .on(
+    "p#description",
+    new ElementHandler({ content: "This is a new description." })
+  )
+  .on(
+    "a#url",
+    new ElementHandler({
+      content: "This is the GitHub",
+      url: "https://github.com/brian-e-haley/why_no_python",
+    })
+  );
 
 /**
  * Respond with hello worker text
